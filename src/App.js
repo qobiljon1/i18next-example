@@ -1,5 +1,7 @@
 import {useTranslation} from "react-i18next";
 import i18next from "i18next";
+import cookie from "js-cookie";
+import {useEffect} from "react";
 
 const language = [
     {
@@ -15,7 +17,8 @@ const language = [
     {
         code: "ar",
         name: "عربي",
-        country_code: "sa"
+        country_code: "sa",
+        dir: "rtl"
     },
     {
         code: "uz",
@@ -40,7 +43,14 @@ const GlobalIcon = ({width = 24, height = 24}) => (
 
 function App() {
     const {t} = useTranslation()
-    const number_of_days = new Date()
+    const currentLanguageCode = cookie.get("i18next") || "uz"
+    const currentLang = language.find(lang => lang.code === currentLanguageCode);
+
+    const number_of_days = Math.floor((new Date("12/31/2022").getTime() - new Date().getTime()) / (86400 * 1000))
+
+    useEffect(() => {
+        document.body.dir = currentLang["dir"] || "ltr"
+    }, [currentLanguageCode])
     return (
         <div className="container">
             <div className="d-flex justify-content-end">
@@ -50,9 +60,11 @@ function App() {
                         <GlobalIcon/>
                     </button>
                     <ul className="dropdown-menu">
+                        <li  className="dropdown-item">{t("language")}</li>
                         {language.map(({name, code, country_code}) =>
                             <li key={country_code}>
                                 <button
+                                    disabled={code === currentLanguageCode}
                                     className="dropdown-item"
                                     onClick={() => i18next.changeLanguage(code)}
                                 >

@@ -16,13 +16,10 @@ i18n
     .use(HttpApi)
     .init({
         supportedLngs: ['en', 'fr', 'ar'],
-        fallbackLng: "fr",
-        interpolation: {
-            escapeValue: false // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
-        },
+        fallbackLng: "en",
         detection: {
-            order: ['htmlTag', 'cookie', 'localStorage', 'path', 'subdomain'],
-            caches: ["localStorage"]
+            order: ['cookie', 'htmlTag', 'localStorage', 'subdomain', 'path'],
+            caches: ["cookie"]
         },
         backend: {
             loadPath: '/assets/locales/{{lng}}/translations.json'
